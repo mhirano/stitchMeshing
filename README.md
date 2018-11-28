@@ -1,4 +1,4 @@
-* This is a forked repository to make it work with MacOSX.*
+*This is a forked repository to make it work with MacOSX.*
 
 # Stitch Meshing
 
