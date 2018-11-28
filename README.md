@@ -1,3 +1,5 @@
+* This is a forked repository to make it work with MacOSX.*
+
 # Stitch Meshing
 
 [Kui Wu](http://www.cs.utah.edu/~kwu/), 
