@@ -110,9 +110,25 @@ include_directories(
   "D:/Libs/gurobi752/win64/include"
 )
 
-link_directories(
-	"D:/Libs/gurobi752/win64/lib"
-)
+if(APPLE)
+    include_directories(
+        # Gurobi
+        "/Library/gurobi752/mac64/include"
+        )
+    link_directories(
+        "/Library/gurobi752/mac64/lib"
+        )
+elseif(MSVC)
+    include_directories(
+        # Gurobi
+        "D:/Libs/gurobi752/win64/include"
+        )
+    link_directories(
+        "D:/Libs/gurobi752/win64/lib"
+        )
+endif()
+
+
 
 # Run bin2c on resource files
 set(PNG_FILES
@@ -182,7 +198,11 @@ add_executable(stitch-meshing MACOSX_BUNDLE
   src/main.cpp
 )
 
+if (MSVC)
 target_link_libraries(stitch-meshing stitch-meshing_lib tbb_static nanogui gurobi75 gurobi_c++mt2015 gurobi_c++mtd2015 ${NANOGUI_EXTRA_LIBS})
+elseif(APPLE)
+target_link_libraries(stitch-meshing stitch-meshing_lib tbb_static nanogui gurobi75 gurobi_c++ ${NANOGUI_EXTRA_LIBS})
+endif()
 
 set_target_properties(stitch-meshing PROPERTIES OUTPUT_NAME "stitch-meshing")
 
@@ -209,19 +229,28 @@ if (UNIX AND NOT ${U_CMAKE_BUILD_TYPE} MATCHES DEBUG)
 endif()
 
 if (WIN32)
-	# Quench some warnings on MSVC
-	if (MSVC)
-		file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/resources/arrow.png
-			DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
-		file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/resources/uvTexture.png
-			DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
-		file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/resources/arrow.png
-			DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/release)
-		file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/resources/uvTexture.png
-			DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/release)
-		file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/resources/arrow.png
-			DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/debug)
-		file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/resources/uvTexture.png
-			DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/debug)
-	endif()
+    # Quench some warnings on MSVC
+    if (MSVC)
+        file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/resources/arrow.png
+                DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
+        file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/resources/uvTexture.png
+                DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
+        file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/resources/arrow.png
+                DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/release)
+        file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/resources/uvTexture.png
+                DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/release)
+        file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/resources/arrow.png
+                DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/debug)
+        file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/resources/uvTexture.png
+                DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/debug)
+    endif()
+elseif(APPLE)
+    file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/resources/arrow.png
+            DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
+    file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/resources/uvTexture.png
+            DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
+    file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/resources/arrow.png
+            DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/stitch-meshing.app/Contents/MacOS)
+    file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/resources/uvTexture.png
+            DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/stitch-meshing.app/Contents/MacOS)
 endif()
