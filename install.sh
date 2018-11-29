@@ -1,6 +1,6 @@
 #!/bin/bash
 
-mkdir build3 
-cd build3
+mkdir build
+cd build
 cmake .. 
 make -j4
